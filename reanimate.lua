@@ -1,7 +1,7 @@
--- free and open source
--- don't steal pls
--- i know someone is going to eventually but pls man
-local VER = '1.22' -- leanreanimate > any reanimate for jab
+-- reanimate remade
+-- wow new reanimate so cool
+-- version 1.23 (added net thingy)
+local VER = '1.23' -- leanreanimate > any reanimate for jab
 game:GetService('TextChatService').TextChannels.RBXGeneral:SendAsync("-gh 62724852,48474294,63690008,451220849,48474313,62234425")
 local p = game:GetService('Players').LocalPlayer
 local c = p.Character
@@ -13,6 +13,10 @@ local pin = c:WaitForChild('Pink Hair').Handle
 local red = c:WaitForChild('Robloxclassicred').Handle
 local hat = c:WaitForChild('Hat1').Handle
 local fakelimbs = {kat,lav,pal,pin,red,hat}
+workspace.FallenPartsDestroyHeight = 0/0
+settings().Physics.AllowSleep = false
+p.MaximumSimulationRadius = math.pow(math.huge, math.huge);
+p.SimulationRadius = math.pow(math.huge, 2);
 for _, v in pairs(fakelimbs) do
 	v:BreakJoints()
 	v.Massless = true
@@ -57,10 +61,18 @@ for _, v in pairs(realchar:GetDescendants()) do
 		game:GetService('RunService').Heartbeat:Connect(function()v.CanCollide = false;v.Massless = true;end)
 	end)
 end
-workspace.FallenPartsDestroyHeight = 0/0
-settings().Physics.AllowSleep = false
-p.MaximumSimulationRadius = math.pow(math.huge, math.huge);
-p.SimulationRadius = math.pow(math.huge, 2);
+coroutine.wrap(function()
+	local ogogcf = hrp.CFrame
+	for i=1,15 do
+		hrp.Velocity = hrp.Velocity + Vector3.new(0, 100, 0) -- velocity somewhat gets net permission i think?
+		for j,b in pairs(fakelimbs) do
+			b.Velocity = b.Velocity + Vector3.new(0, 150, 0)
+		end
+		task.wait(.2)
+	end
+	hrp.Velocity = Vector3.new(0,0,0)
+	hrp.CFrame = ogogcf
+end)()
 local Jumping = false
 p:GetMouse().KeyDown:Connect(function(Key)
 	coroutine.wrap(function()
@@ -153,36 +165,39 @@ coroutine.wrap(function()
 	lolwtf:Disconnect()
 	msg:Destroy()
 end)()
-while c:IsDescendantOf(workspace) do
-	task.wait()
-	if not c:IsDescendantOf(workspace) then return end
-	local funny = Vector3.new(0,0,math.sin(os.clock()*30)*0.01)
-	if not flinging then
-		hr.CFrame = hrp.CFrame * CFrame.new(0,-30,0)
-	end
-	coroutine.wrap(function()
-		for _, v in pairs(realchar:GetDescendants()) do
-			if v:IsA('BasePart') and v.CanCollide then
-				v.CanCollide = false
-			end
+local velocity = Vector3.new(0,200,0)
+coroutine.wrap(function() -- i know i know coroutines so scary wa
+	while c:IsDescendantOf(workspace) do
+		task.wait()
+		if not c:IsDescendantOf(workspace) then return end
+		local funny = Vector3.new(0,0,math.sin(os.clock()*30)*0.01)
+		if not flinging then
+			hr.CFrame = hrp.CFrame * CFrame.new(0,-30,0)
 		end
-	end)()
-	kat.Velocity = Vector3.new(0,110,0)
-	lav.Velocity = Vector3.new(0,110,0)
-	pal.Velocity = Vector3.new(0,110,0)
-	pin.Velocity = Vector3.new(0,110,0)
-	red.Velocity = Vector3.new(0,110,0)
-	hat.Velocity = Vector3.new(0,110,0)
-	kat.CFrame = (ra.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
-	lav.CFrame = (la.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
-	pal.CFrame = (rl.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
-	pin.CFrame = (ll.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
+		coroutine.wrap(function()
+			for _, v in pairs(realchar:GetDescendants()) do
+				if v:IsA('BasePart') and v.CanCollide then
+					v.CanCollide = false
+				end
+			end
+		end)()
+		kat.Velocity = velocity
+		lav.Velocity = velocity
+		pal.Velocity = velocity
+		pin.Velocity = velocity
+		red.Velocity = velocity
+		hat.Velocity = velocity
+		kat.CFrame = (ra.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
+		lav.CFrame = (la.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
+		pal.CFrame = (rl.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
+		pin.CFrame = (ll.CFrame+funny)*CFrame.Angles(math.rad(90),0,0)
 
-	red.CFrame = (t.CFrame+funny)*(CFrame.new(0.5,0,0)*CFrame.Angles(math.rad(90),0,0))
-	hat.CFrame = (t.CFrame+funny)*(CFrame.new(-0.5,0,0)*CFrame.Angles(math.rad(90),0,0))
-	
-	for _, v in pairs(support) do
-		v[1].Velocity = Vector3.new(0,110,0)
-		v[1].CFrame = v[2].CFrame+funny
+		red.CFrame = (t.CFrame+funny)*(CFrame.new(0.5,0,0)*CFrame.Angles(math.rad(90),0,0))
+		hat.CFrame = (t.CFrame+funny)*(CFrame.new(-0.5,0,0)*CFrame.Angles(math.rad(90),0,0))
+
+		for _, v in pairs(support) do
+			v[1].Velocity = velocity
+			v[1].CFrame = v[2].CFrame+funny
+		end
 	end
-end
+end)()
